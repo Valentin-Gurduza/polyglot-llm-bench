@@ -1,0 +1,201 @@
+[
+  {
+    "id": 1,
+    "language": "en",
+    "category": "constraint_adherence",
+    "prompt": "Write a product review for a wireless Bluetooth speaker. The review must be EXACTLY 3 sentences long. Do NOT use the words 'good', 'great', or 'excellent'. The review must mention the battery life and sound quality.",
+    "constraints": [
+      "Exactly 3 sentences",
+      "Must not contain 'good', 'great', or 'excellent'",
+      "Must mention battery life",
+      "Must mention sound quality"
+    ],
+    "reference_notes": "Check sentence count strictly (splitting by '.', '!', '?'). Verify forbidden words via case-insensitive search. Confirm 'battery' and 'sound' keywords present."
+  },
+  {
+    "id": 2,
+    "language": "en",
+    "category": "cultural_localization",
+    "prompt": "Rewrite the following American Thanksgiving dinner invitation for a British audience. Adapt cultural references, spelling, and food items appropriately while maintaining a warm, festive tone:\n\n\"You're invited to our Thanksgiving potluck! Bring your favorite dish — we'll have turkey, cranberry sauce, cornbread, and pumpkin pie. Football starts at 3 PM. RSVP by November 20th.\"",
+    "constraints": [
+      "Must adapt to British cultural context",
+      "Must use British English spelling",
+      "Must replace or contextualize American-specific references",
+      "Must maintain warm, inviting tone"
+    ],
+    "reference_notes": "Thanksgiving is not a UK holiday — the adaptation should reframe the context (e.g., autumn gathering, harvest supper). 'Football' in the US = American football; in the UK = soccer. Spelling: 'favourite', 'colour', etc."
+  },
+  {
+    "id": 3,
+    "language": "en",
+    "category": "fact_checking",
+    "prompt": "Explain the key milestones in the founding and development of the European Union, including the exact years of: the Treaty of Rome, the Maastricht Treaty, the introduction of the Euro currency, and the most recent country to join the EU. Be precise with dates.",
+    "constraints": [
+      "Treaty of Rome: 1957",
+      "Maastricht Treaty: 1992",
+      "Euro introduction: 1999 (physical notes/coins: 2002)",
+      "Most recent member: Croatia (2013)",
+      "All dates must be factually accurate"
+    ],
+    "reference_notes": "Verify each date against established historical records. The model should NOT claim any country joined after Croatia (2013) unless the model's training data includes events after 2024. Watch for hallucinated dates or members."
+  },
+  {
+    "id": 4,
+    "language": "en",
+    "category": "technical_localization",
+    "prompt": "A Kubernetes cluster shows the following error: 'CrashLoopBackOff — Back-off restarting failed container'. Explain this error message to a non-technical project manager in plain English. Cover: what is happening, why it might happen, and what the development team should do next. Avoid jargon.",
+    "constraints": [
+      "Must not use unexplained technical jargon",
+      "Must cover: what is happening, why, and next steps",
+      "Must be understandable by a non-technical reader",
+      "Must maintain technical accuracy despite simplification"
+    ],
+    "reference_notes": "CrashLoopBackOff means a container keeps crashing and Kubernetes keeps trying to restart it with increasing delays. Common causes: misconfiguration, missing dependencies, OOM. The explanation should be accurate but accessible."
+  },
+  {
+    "id": 5,
+    "language": "en",
+    "category": "logical_reasoning",
+    "prompt": "A farmer needs to cross a river with a wolf, a goat, and a cabbage. The boat can only carry the farmer and one item at a time. If left alone together: the wolf will eat the goat, and the goat will eat the cabbage. The wolf won't eat the cabbage. Describe the minimum number of crossings needed and list each step.",
+    "constraints": [
+      "Must provide the correct minimum solution (7 crossings)",
+      "Each step must be explicitly listed",
+      "No constraint violations at any step (wolf+goat alone, goat+cabbage alone)",
+      "Must be logically consistent"
+    ],
+    "reference_notes": "Classic river-crossing puzzle. Solution: 1) Farmer+Goat cross. 2) Farmer returns. 3) Farmer+Wolf cross. 4) Farmer+Goat return. 5) Farmer+Cabbage cross. 6) Farmer returns. 7) Farmer+Goat cross."
+  },
+  {
+    "id": 6,
+    "language": "ro",
+    "category": "constraint_adherence",
+    "prompt": "Scrie o reteta pentru clatite romanesti traditionale. Reteta trebuie sa aiba EXACT 5 pasi, numerotati de la 1 la 5. NU folosi cuvantul 'adauga' in niciun pas. Fiecare pas trebuie sa fie o singura propozitie.",
+    "constraints": [
+      "Exact 5 pasi numerotati (1-5)",
+      "Cuvantul 'adauga' nu apare nicaieri",
+      "Fiecare pas = o singura propozitie",
+      "Reteta trebuie sa fie corecta pentru clatite"
+    ],
+    "reference_notes": "Verificare: numarati pasii (strict 5), cautare case-insensitive pentru 'adauga'/'Adauga', numarati propozitiile per pas. Reteta trebuie sa includa: faina, oua, lapte, si prajire."
+  },
+  {
+    "id": 7,
+    "language": "ro",
+    "category": "cultural_localization",
+    "prompt": "Explica unui turist strain semnificatia traditionala a Martisorului in cultura romaneasca. Include: originea traditiei, simbolismul culorilor alb si rosu, cum se ofera si se poarta martisorul, si cand se celebreaza. Raspunsul trebuie sa fie in limba romana.",
+    "constraints": [
+      "Trebuie sa mentioneze data de 1 Martie",
+      "Trebuie sa explice simbolismul culorilor (alb = iarna/puritate, rosu = primavara/vitalitate)",
+      "Trebuie sa descrie obiceiul oferirii si purtarii",
+      "Raspunsul trebuie sa fie complet in limba romana"
+    ],
+    "reference_notes": "Martisorul este o traditie romaneasca (si moldoveneasca/bulgara) celebrata pe 1 Martie. Barbatii ofera martisoare femeilor. Se poarta la piept pana la sfarsitul lunii martie, apoi se atarna intr-un copac inflorit."
+  },
+  {
+    "id": 8,
+    "language": "ro",
+    "category": "fact_checking",
+    "prompt": "Descrie cronologia evenimentelor principale ale Revolutiei Romane din decembrie 1989. Include: orasul unde au inceput protestele, data inceputului, rolul lui Nicolae Ceausescu, si data executiei acestuia. Fii precis cu datele.",
+    "constraints": [
+      "Protestele au inceput la Timisoara",
+      "Data inceputului: 16 decembrie 1989",
+      "Ceausescu a fugit pe 22 decembrie 1989",
+      "Executia: 25 decembrie 1989",
+      "Toate datele trebuie sa fie corecte"
+    ],
+    "reference_notes": "Revolutia a inceput la Timisoara pe 16 decembrie 1989 cu proteste in jurul casei pastorului Laszlo Tokes. Ceausescu a tinut ultimul discurs pe 21 decembrie la Bucuresti, a fugit pe 22 decembrie, a fost judecat si executat pe 25 decembrie 1989."
+  },
+  {
+    "id": 9,
+    "language": "ro",
+    "category": "technical_localization",
+    "prompt": "Explica conceptul de 'invatare automata' (machine learning) folosind terminologie tehnica standardizata in limba romana. Acopera: definitia, diferenta intre invatare supervizata si nesupervizata, si da un exemplu practic pentru fiecare tip. Foloseste termenii tehnici consacrati in romana, nu anglicisme.",
+    "constraints": [
+      "Trebuie sa foloseasca 'invatare automata', nu 'machine learning'",
+      "Trebuie sa defineasca invatare supervizata si nesupervizata",
+      "Trebuie sa dea cate un exemplu pentru fiecare",
+      "Trebuie sa evite anglicismele inutile"
+    ],
+    "reference_notes": "Terminologie standard RO: 'invatare automata' (ML), 'invatare supervizata' (supervised), 'invatare nesupervizata' (unsupervised), 'retea neuronala' (neural network), 'set de date' (dataset), 'clasificare' (classification), 'grupare' (clustering)."
+  },
+  {
+    "id": 10,
+    "language": "ro",
+    "category": "logical_reasoning",
+    "prompt": "Intr-o camera sunt patru persoane: Ana, Bogdan, Clara si Dan. Se stie ca:\n1. Ana sta la stanga lui Bogdan.\n2. Clara nu sta langa Dan.\n3. Dan sta la un capat al randului.\n4. Bogdan sta langa Clara.\n\nCare este ordinea corecta de la stanga la dreapta? Explica rationamentul pas cu pas.",
+    "constraints": [
+      "Trebuie sa ajunga la solutia corecta: Dan, Ana, Bogdan, Clara",
+      "Trebuie sa explice rationamentul pas cu pas",
+      "Trebuie sa verifice toate cele 4 conditii",
+      "Raspunsul trebuie sa fie logic consistent"
+    ],
+    "reference_notes": "Solutia corecta: Dan - Ana - Bogdan - Clara. Rationament: Dan la capat (conditia 3). Ana la stanga lui Bogdan (conditia 1). Bogdan langa Clara (conditia 4). Clara nu langa Dan (conditia 2) -> Clara la celalalt capat."
+  },
+  {
+    "id": 11,
+    "language": "fr",
+    "category": "constraint_adherence",
+    "prompt": "Redigez un courriel formel a un directeur d'entreprise pour demander un rendez-vous professionnel. Le courriel doit contenir MAXIMUM 100 mots. N'utilisez PAS le mot 'cordialement' ni 'sincerement' comme formule de politesse. Le courriel doit inclure une date et une heure proposees.",
+    "constraints": [
+      "Maximum 100 mots",
+      "Ne contient pas 'cordialement' ni 'sincerement'",
+      "Inclut une date et une heure proposees",
+      "Ton formel maintenu"
+    ],
+    "reference_notes": "Compter les mots strictement (max 100). Recherche insensible a la casse pour 'cordialement'/'sincerement'. Verifier la presence d'une date et d'une heure. Alternatives acceptables: 'Respectueusement', 'Avec mes salutations distinguees', etc."
+  },
+  {
+    "id": 12,
+    "language": "fr",
+    "category": "cultural_localization",
+    "prompt": "Expliquez la signification historique et culturelle du 14 juillet (la fete nationale francaise) a un etranger qui ne connait pas l'histoire de France. Incluez : l'evenement historique d'origine, comment la fete est celebree aujourd'hui, et pourquoi elle est importante pour l'identite francaise.",
+    "constraints": [
+      "Doit mentionner la prise de la Bastille (1789)",
+      "Doit decrire les celebrations modernes (defile militaire, feux d'artifice)",
+      "Doit expliquer l'importance symbolique",
+      "Doit etre accessible a un non-Francais"
+    ],
+    "reference_notes": "Le 14 juillet commemore la prise de la Bastille le 14 juillet 1789, symbole de la fin de l'absolutisme. Celebrations: defile militaire sur les Champs-Elysees, feux d'artifice, bals des pompiers. Attention: la fete nationale celebre aussi la Fete de la Federation (14 juillet 1790)."
+  },
+  {
+    "id": 13,
+    "language": "fr",
+    "category": "fact_checking",
+    "prompt": "Decrivez les principales etapes de la construction de la Tour Eiffel. Incluez : l'architecte/ingenieur principal, l'annee du debut et de la fin de la construction, la hauteur originale, et l'evenement pour lequel elle a ete construite. Soyez precis avec les chiffres.",
+    "constraints": [
+      "Gustave Eiffel (ingenieur principal)",
+      "Construction: 1887-1889",
+      "Hauteur originale: environ 300 metres (312 m avec drapeau)",
+      "Construite pour l'Exposition universelle de 1889",
+      "Tous les chiffres doivent etre exacts"
+    ],
+    "reference_notes": "La Tour Eiffel a ete concue par les ingenieurs Maurice Koechlin et Emile Nouguier du bureau de Gustave Eiffel. Construction: 28 janvier 1887 - 31 mars 1889. Hauteur: 300 m (330 m avec antennes aujourd'hui). Inauguree pour l'Exposition universelle de 1889 (centenaire de la Revolution francaise)."
+  },
+  {
+    "id": 14,
+    "language": "fr",
+    "category": "technical_localization",
+    "prompt": "Traduisez et adaptez la documentation technique suivante d'une API REST en francais technique professionnel. Utilisez la terminologie informatique francaise standardisee :\n\n\"This endpoint accepts a POST request with a JSON body containing the user's authentication token. The response returns a paginated list of resources with metadata. Rate limiting is enforced at 100 requests per minute. Unauthorized requests return a 401 status code.\"",
+    "constraints": [
+      "Doit utiliser la terminologie francaise standardisee",
+      "Doit traduire 'endpoint' en 'point de terminaison'",
+      "Doit traduire 'token' en 'jeton'",
+      "Doit maintenir la precision technique",
+      "Doit etre naturel en francais technique"
+    ],
+    "reference_notes": "Terminologie FR standardisee: 'endpoint' = 'point de terminaison', 'request' = 'requete', 'response' = 'reponse', 'token' = 'jeton (d'authentification)', 'rate limiting' = 'limitation de debit', 'paginated' = 'pagine(e)', 'status code' = 'code de statut'."
+  },
+  {
+    "id": 15,
+    "language": "fr",
+    "category": "logical_reasoning",
+    "prompt": "Un train part de Paris a 08h00 et arrive a Lyon a 10h00. Un autre train part de Lyon a 08h30 et arrive a Paris a 10h30. Les deux trains roulent a vitesse constante sur la meme ligne.\n\nA quelle heure les deux trains se croisent-ils ? Montrez votre raisonnement etape par etape.",
+    "constraints": [
+      "Doit arriver a la reponse correcte: 09h15",
+      "Doit montrer le raisonnement mathematique",
+      "Doit definir les variables (distance, vitesse)",
+      "La solution doit etre logiquement coherente"
+    ],
+    "reference_notes": "Paris-Lyon: duree 2h (08h00-10h00). Lyon-Paris: duree 2h (08h30-10h30). Les trains ont la meme vitesse (D/2h). Le train 1 part 30 min avant. Quand le train 2 part (08h30), le train 1 a parcouru 1/4 de D. Ils se rapprochent a vitesse 2x(D/2h) = D/h. Distance restante: 3D/4. Temps de rencontre: (3D/4)/(D/h) = 0.75h = 45 min apres 08h30 = 09h15."
+  }
+]

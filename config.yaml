@@ -1,0 +1,51 @@
+# =============================================================================
+# Polyglot-LLM-Bench — Default Configuration
+# =============================================================================
+# Override via CLI flags or environment variables.
+# =============================================================================
+
+# ── Target Languages (ISO 639-1) ────────────────────────────────────────────
+languages:
+  - ro   # Romanian
+  - en   # English
+  - fr   # French
+
+# ── Models to Benchmark ─────────────────────────────────────────────────────
+# OpenRouter model slugs — see full list: python benchmark_runner.py list-models
+models:
+  - openai/gpt-4o
+  - anthropic/claude-3.5-sonnet
+  - meta-llama/llama-3.3-70b-instruct
+  - mistralai/mistral-large
+  - deepseek/deepseek-chat
+
+# ── Sampling Parameters ─────────────────────────────────────────────────────
+sampling:
+  temperature: 0.2
+  top_p: 0.9
+  max_tokens: 2048
+
+# ── Execution ────────────────────────────────────────────────────────────────
+execution:
+  max_workers: 5          # Concurrent API requests
+  retry_attempts: 5       # Max retries per request
+  retry_min_wait: 2       # Minimum backoff wait (seconds)
+  retry_max_wait: 60      # Maximum backoff wait (seconds)
+  rate_limit_rpm: 60      # Requests per minute limit
+
+# ── Model Discovery ─────────────────────────────────────────────────────────
+discovery:
+  cache_ttl_seconds: 3600          # How long to cache the model catalog (1 hour)
+  cache_path: ".cache/models_catalog.json"
+  include_free: true               # Include :free variants in searches
+
+# ── Output ───────────────────────────────────────────────────────────────────
+output:
+  directory: "results"
+  results_json: "benchmark_results.json"
+  evaluation_csv: "evaluation_sheet.csv"
+  leaderboard_csv: "leaderboard.csv"
+
+# ── Dataset ──────────────────────────────────────────────────────────────────
+dataset:
+  path: "data/dataset.json"

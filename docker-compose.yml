@@ -1,0 +1,24 @@
+# =============================================================================
+# Polyglot-LLM-Bench — Docker Compose
+# =============================================================================
+# Usage:
+#   docker compose up           # Run with default args (--dry-run)
+#   docker compose run bench run --languages en --models openai/gpt-4o
+#   docker compose run bench list-models --free-only
+# =============================================================================
+
+services:
+  bench:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: polyglot-bench
+    env_file:
+      - .env
+    volumes:
+      - ./results:/app/results
+      - ./data:/app/data:ro
+      - ./.cache:/app/.cache
+    environment:
+      - PYTHONPATH=/app/src
+      - PYTHONUNBUFFERED=1
