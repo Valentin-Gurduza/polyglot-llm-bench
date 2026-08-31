@@ -9,7 +9,7 @@
 [![OpenRouter](https://img.shields.io/badge/API-OpenRouter-purple.svg)](https://openrouter.ai)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-*A production-quality multilingual LLM evaluation framework for benchmarking instruction-following, cultural localization, factual accuracy, and logical reasoning across languages.*
+*A multilingual LLM evaluation framework for benchmarking instruction-following, cultural localization, factual accuracy, and logical reasoning across languages.*
 
 </div>
 
