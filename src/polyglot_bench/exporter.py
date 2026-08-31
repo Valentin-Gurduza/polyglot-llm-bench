@@ -315,7 +315,7 @@ def _format_markdown_to_clean_html(raw_text: str) -> str:
 # Visual HTML Evaluation Report (Per-Model & Master)
 # ---------------------------------------------------------------------------
 def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str:
-    """Generate a responsive, beautifully styled HTML review dossier for a model."""
+    """Generate a responsive, beautifully styled HTML review dossier for a model with interactive 1-5 scoring rubric."""
     total = len(responses)
     successful = sum(1 for r in responses if r.success)
     failed = total - successful
@@ -327,6 +327,8 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
     total_tokens = sum(r.token_usage.total_tokens for r in responses if r.success)
 
     cards_html = []
+    tasks_data = []
+
     for i, r in enumerate(responses, 1):
         status_badge = (
             '<span class="badge badge-success">✓ Success</span>'
@@ -344,6 +346,15 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
         else:
             formatted_html = f'<div class="error-msg">⚠️ Request Failed: {html.escape(r.error or "Unknown error")}</div>'
             raw_escaped = html.escape(r.error or "Unknown error")
+
+        tasks_data.append({
+            "prompt_id": r.prompt_id,
+            "language": r.language,
+            "category": r.category,
+            "model": r.model,
+            "prompt_text": r.prompt_text,
+            "model_response": r.raw_response if r.success else f"[ERROR] {r.error}",
+        })
 
         card = f"""
         <div class="eval-card" id="task-{r.prompt_id}">
@@ -378,12 +389,87 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
                 <div class="raw-response" id="raw-{r.prompt_id}" style="display: none;">
                     <pre><code>{raw_escaped}</code></pre>
                 </div>
+
+                <!-- Human Evaluation Rubric (1-5 Scale) -->
+                <div class="scoring-section">
+                    <div class="scoring-header">
+                        <span class="section-label" style="margin-bottom: 0;">✍️ Human Evaluator Rubric (1–5 Scale)</span>
+                        <span class="score-summary-pill" id="score-summary-{r.prompt_id}">Score: <strong>-- / 20</strong></span>
+                    </div>
+
+                    <div class="rubric-grid">
+                        <div class="rubric-card">
+                            <div class="rubric-title">
+                                <span>1. Constraint Adherence</span>
+                                <span class="rubric-val" id="val-ca-{r.prompt_id}">--</span>
+                            </div>
+                            <div class="rubric-desc">Sentence count, word limit, forbidden words, schema</div>
+                            <div class="score-btns" data-task="{r.prompt_id}" data-dim="ca">
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ca', 1)">1</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ca', 2)">2</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ca', 3)">3</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ca', 4)">4</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ca', 5)">5</button>
+                            </div>
+                        </div>
+
+                        <div class="rubric-card">
+                            <div class="rubric-title">
+                                <span>2. Linguistic Naturalness</span>
+                                <span class="rubric-val" id="val-ln-{r.prompt_id}">--</span>
+                            </div>
+                            <div class="rubric-desc">Grammar, diacritics (ă/î/ș/ț), fluency, idiomatic style</div>
+                            <div class="score-btns" data-task="{r.prompt_id}" data-dim="ln">
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ln', 1)">1</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ln', 2)">2</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ln', 3)">3</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ln', 4)">4</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'ln', 5)">5</button>
+                            </div>
+                        </div>
+
+                        <div class="rubric-card">
+                            <div class="rubric-title">
+                                <span>3. Factual Accuracy</span>
+                                <span class="rubric-val" id="val-fa-{r.prompt_id}">--</span>
+                            </div>
+                            <div class="rubric-desc">Dates, historical facts, calculation accuracy</div>
+                            <div class="score-btns" data-task="{r.prompt_id}" data-dim="fa">
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'fa', 1)">1</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'fa', 2)">2</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'fa', 3)">3</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'fa', 4)">4</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'fa', 5)">5</button>
+                            </div>
+                        </div>
+
+                        <div class="rubric-card">
+                            <div class="rubric-title">
+                                <span>4. Tone & Clarity</span>
+                                <span class="rubric-val" id="val-tc-{r.prompt_id}">--</span>
+                            </div>
+                            <div class="rubric-desc">Appropriate formality, audience localization, helpfulness</div>
+                            <div class="score-btns" data-task="{r.prompt_id}" data-dim="tc">
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'tc', 1)">1</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'tc', 2)">2</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'tc', 3)">3</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'tc', 4)">4</button>
+                                <button type="button" class="btn-score" onclick="setScore({r.prompt_id}, 'tc', 5)">5</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notes-row">
+                        <input type="text" id="note-{r.prompt_id}" class="notes-field" placeholder="Annotator critique & notes for Task #{r.prompt_id}..." oninput="saveNote({r.prompt_id})">
+                    </div>
+                </div>
             </div>
         </div>
         """
         cards_html.append(card)
 
     cards_str = "\n".join(cards_html)
+    tasks_json_str = json.dumps(tasks_data, ensure_ascii=False)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -394,8 +480,6 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Marked.js CDN for enhanced markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {{
             --bg-color: #0b0f19;
@@ -414,6 +498,8 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             --response-bg: #101728;
             --code-bg: #070a12;
             --border-highlight: #3b82f6;
+            --rubric-bg: #0d1424;
+            --rubric-card-bg: #131b2e;
         }}
         * {{
             box-sizing: border-box;
@@ -451,7 +537,42 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.05rem;
             font-weight: 500;
+            margin-bottom: 1.5rem;
+        }}
+        .header-actions {{
+            display: flex;
+            gap: 1rem;
             margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+        }}
+        .action-btn {{
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.65rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }}
+        .action-btn:hover {{
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transform: translateY(-1px);
+        }}
+        .action-btn.secondary {{
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+            color: var(--text-body);
+        }}
+        .action-btn.secondary:hover {{
+            background: rgba(51, 65, 85, 0.8);
+            color: #ffffff;
         }}
         .stats-grid {{
             display: grid;
@@ -482,7 +603,7 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            margin-bottom: 2rem;
+            margin-bottom: 2.25rem;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             transition: transform 0.15s ease, border-color 0.2s ease;
@@ -599,6 +720,7 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             color: var(--text-body);
             font-size: 1rem;
             line-height: 1.75;
+            margin-bottom: 1.75rem;
         }}
         .rendered-response .md-p {{
             margin-bottom: 1rem;
@@ -679,6 +801,7 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             border-radius: 10px;
             padding: 1.25rem;
             overflow-x: auto;
+            margin-bottom: 1.75rem;
         }}
         .raw-response pre {{
             font-family: 'JetBrains Mono', monospace;
@@ -686,6 +809,115 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             color: #f1f5f9;
             white-space: pre-wrap;
             word-break: break-word;
+        }}
+
+        /* Interactive Scoring Section */
+        .scoring-section {{
+            background: var(--rubric-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }}
+        .scoring-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }}
+        .score-summary-pill {{
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }}
+        .score-summary-pill strong {{
+            color: var(--accent-cyan);
+            font-size: 1rem;
+        }}
+        .rubric-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }}
+        .rubric-card {{
+            background: var(--rubric-card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 1rem;
+        }}
+        .rubric-title {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }}
+        .rubric-val {{
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.95rem;
+        }}
+        .rubric-desc {{
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+            min-height: 32px;
+        }}
+        .score-btns {{
+            display: flex;
+            gap: 0.4rem;
+        }}
+        .btn-score {{
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-body);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }}
+        .btn-score:hover {{
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }}
+        .btn-score.active {{
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }}
+        .notes-row {{
+            margin-top: 1rem;
+        }}
+        .notes-field {{
+            width: 100%;
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-body);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }}
+        .notes-field:focus {{
+            border-color: var(--accent-blue);
         }}
         .error-msg {{
             color: var(--accent-red);
@@ -702,6 +934,16 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
         <header>
             <div class="header-title">LLM Benchmark Evaluation Report</div>
             <div class="header-subtitle">Model: {html.escape(model_name)}</div>
+            
+            <div class="header-actions">
+                <button type="button" class="action-btn" onclick="exportAnnotatedCSV()">
+                    💾 Export Scored CSV Sheet
+                </button>
+                <button type="button" class="action-btn secondary" onclick="resetAllScores()">
+                    🔄 Reset Scoring Form
+                </button>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-box">
                     <div class="stat-val">{total}</div>
@@ -732,6 +974,96 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
     </div>
 
     <script>
+        const MODEL_SLUG = "{html.escape(sanitize_model_slug(model_name))}";
+        const TASKS_DATA = {tasks_json_str};
+
+        // Store active ratings in memory and sync with localStorage
+        const scoresState = {{}};
+
+        function loadSavedScores() {{
+            const saved = localStorage.getItem(`polyglot_scores_${{MODEL_SLUG}}`);
+            if (saved) {{
+                try {{
+                    const parsed = JSON.parse(saved);
+                    Object.assign(scoresState, parsed);
+                    for (const taskId in scoresState) {{
+                        const tState = scoresState[taskId];
+                        if (tState.ca) applyButtonUI(taskId, 'ca', tState.ca);
+                        if (tState.ln) applyButtonUI(taskId, 'ln', tState.ln);
+                        if (tState.fa) applyButtonUI(taskId, 'fa', tState.fa);
+                        if (tState.tc) applyButtonUI(taskId, 'tc', tState.tc);
+                        if (tState.notes) {{
+                            const noteInput = document.getElementById(`note-${{taskId}}`);
+                            if (noteInput) noteInput.value = tState.notes;
+                        }}
+                        updateTotalScoreUI(taskId);
+                    }}
+                }} catch (e) {{}}
+            }}
+        }}
+
+        function setScore(taskId, dim, value) {{
+            if (!scoresState[taskId]) scoresState[taskId] = {{}};
+            scoresState[taskId][dim] = value;
+
+            applyButtonUI(taskId, dim, value);
+            updateTotalScoreUI(taskId);
+            saveToStorage();
+        }}
+
+        function applyButtonUI(taskId, dim, value) {{
+            const container = document.querySelector(`.score-btns[data-task="${{taskId}}"][data-dim="${{dim}}"]`);
+            if (container) {{
+                const btns = container.querySelectorAll('.btn-score');
+                btns.forEach((btn, idx) => {{
+                    if (idx + 1 === value) {{
+                        btn.classList.add('active');
+                    }} else {{
+                        btn.classList.remove('active');
+                    }}
+                }});
+            }}
+            const valLabel = document.getElementById(`val-${{dim}}-${{taskId}}`);
+            if (valLabel) valLabel.innerText = `${{value}} / 5`;
+        }}
+
+        function updateTotalScoreUI(taskId) {{
+            const t = scoresState[taskId] || {{}};
+            const ca = t.ca || 0;
+            const ln = t.ln || 0;
+            const fa = t.fa || 0;
+            const tc = t.tc || 0;
+
+            const totalSpan = document.getElementById(`score-summary-${{taskId}}`);
+            if (!totalSpan) return;
+
+            const scoredCount = (t.ca ? 1 : 0) + (t.ln ? 1 : 0) + (t.fa ? 1 : 0) + (t.tc ? 1 : 0);
+            if (scoredCount === 0) {{
+                totalSpan.innerHTML = `Score: <strong>-- / 20</strong>`;
+            }} else {{
+                const sum = ca + ln + fa + tc;
+                totalSpan.innerHTML = `Score: <strong>${{sum}} / 20</strong> (${{scoredCount}}/4 rated)`;
+            }}
+        }}
+
+        function saveNote(taskId) {{
+            const noteInput = document.getElementById(`note-${{taskId}}`);
+            if (!scoresState[taskId]) scoresState[taskId] = {{}};
+            scoresState[taskId].notes = noteInput ? noteInput.value : "";
+            saveToStorage();
+        }}
+
+        function saveToStorage() {{
+            localStorage.setItem(`polyglot_scores_${{MODEL_SLUG}}`, JSON.stringify(scoresState));
+        }}
+
+        function resetAllScores() {{
+            if (confirm("Reset all evaluator scores and notes for this model?")) {{
+                localStorage.removeItem(`polyglot_scores_${{MODEL_SLUG}}`);
+                location.reload();
+            }}
+        }}
+
         function toggleRawView(taskId) {{
             const rendered = document.getElementById(`rendered-${{taskId}}`);
             const raw = document.getElementById(`raw-${{taskId}}`);
@@ -748,15 +1080,62 @@ def _generate_model_html(model_name: str, responses: list[ModelResponse]) -> str
             }}
         }}
 
-        // If marked.js is available from CDN, dynamically parse markdown for maximum fidelity
+        function exportAnnotatedCSV() {{
+            const headers = [
+                "prompt_id",
+                "language",
+                "category",
+                "model",
+                "prompt_text",
+                "model_response",
+                "constraint_adherence",
+                "linguistic_naturalness",
+                "factual_accuracy",
+                "tone_clarity",
+                "total_score",
+                "annotator_notes"
+            ];
+
+            const rows = [headers];
+
+            TASKS_DATA.forEach(task => {{
+                const s = scoresState[task.prompt_id] || {{}};
+                const ca = s.ca || "";
+                const ln = s.ln || "";
+                const fa = s.fa || "";
+                const tc = s.tc || "";
+                const total = (s.ca && s.ln && s.fa && s.tc) ? (s.ca + s.ln + s.fa + s.tc) : "";
+                const notes = s.notes || "";
+
+                rows.push([
+                    task.prompt_id,
+                    task.language,
+                    task.category,
+                    task.model,
+                    task.prompt_text,
+                    task.model_response,
+                    ca,
+                    ln,
+                    fa,
+                    tc,
+                    total,
+                    notes
+                ]);
+            }});
+
+            const csvContent = rows.map(r => r.map(cell => `"${{String(cell).replace(/"/g, '""')}}"`).join(",")).join("\\n");
+            const blob = new Blob([csvContent], {{ type: 'text/csv;charset=utf-8;' }});
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `evaluation_sheet_${{MODEL_SLUG}}_annotated.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }}
+
         document.addEventListener("DOMContentLoaded", () => {{
-            if (typeof marked !== "undefined") {{
-                // Configure marked options
-                marked.setOptions({{
-                    gfm: true,
-                    breaks: true,
-                }});
-            }}
+            loadSavedScores();
         }});
     </script>
 </body>
