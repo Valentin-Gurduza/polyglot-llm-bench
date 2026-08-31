@@ -71,7 +71,7 @@ class DatasetConfig(BaseModel):
 class Settings(BaseModel):
     """Root configuration for Polyglot-LLM-Bench."""
 
-    languages: list[str] = Field(default=["ro", "en", "fr"])
+    languages: list[str] = Field(default=["ro", "en"])
     models: list[str] = Field(
         default=[
             "openai/gpt-4o",

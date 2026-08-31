@@ -29,6 +29,9 @@ from polyglot_bench.discovery import ModelCatalog, ModelInfo
 from polyglot_bench.exporter import (
     export_evaluation_sheet,
     export_leaderboard,
+    export_per_model_evaluation_sheets,
+    export_per_model_html_reports,
+    export_per_model_results_json,
     export_results_json,
 )
 from polyglot_bench.runner import BenchmarkRunner
@@ -273,10 +276,11 @@ async def handle_run(args: argparse.Namespace) -> None:
     if args.dry_run or not responses:
         return
 
-    # Export results
+    # Export results directory
     out_dir = Path(settings.output.directory)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Export consolidated results
     json_path = export_results_json(
         responses, meta, out_dir / settings.output.results_json
     )
@@ -287,10 +291,30 @@ async def handle_run(args: argparse.Namespace) -> None:
         responses, out_dir / settings.output.leaderboard_csv
     )
 
-    console.print(f"\n[bold green]📁 Results exported:[/bold green]")
-    console.print(f"  JSON results:      {json_path}")
-    console.print(f"  Evaluation sheet:  {csv_path}")
-    console.print(f"  Leaderboard:       {lb_path}")
+    # Export separate per-model results, CSV evaluation sheets, and HTML visual reports
+    per_model_csvs = export_per_model_evaluation_sheets(responses, out_dir)
+    per_model_jsons = export_per_model_results_json(responses, meta, out_dir)
+    per_model_htmls = export_per_model_html_reports(responses, out_dir)
+
+    console.print(f"\n[bold green]📁 Results exported to {out_dir}/ :[/bold green]")
+    console.print(f"  [cyan]📊 Summary Leaderboard:[/cyan]  {lb_path}")
+    console.print(f"  [cyan]📑 Master Eval Sheet:[/cyan]    {csv_path}")
+    console.print(f"  [cyan]📦 Master Raw JSON:[/cyan]      {json_path}")
+
+    if per_model_htmls:
+        console.print(f"\n[bold green]🌐 Visual HTML Reports (Open in Browser):[/bold green]")
+        for p in per_model_htmls:
+            console.print(f"  • {p}")
+
+    if per_model_csvs:
+        console.print(f"\n[bold cyan]📊 Per-Model CSV Evaluation Sheets (for human annotators):[/bold cyan]")
+        for p in per_model_csvs:
+            console.print(f"  • {p}")
+
+    if per_model_jsons:
+        console.print(f"\n[bold cyan]📦 Per-Model Raw JSON Results:[/bold cyan]")
+        for p in per_model_jsons:
+            console.print(f"  • {p}")
 
 
 async def handle_list_models(args: argparse.Namespace) -> None:

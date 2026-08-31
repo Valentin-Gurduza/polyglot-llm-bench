@@ -8,7 +8,6 @@
 languages:
   - ro   # Romanian
   - en   # English
-  - fr   # French
 
 # ── Models to Benchmark ─────────────────────────────────────────────────────
 # OpenRouter model slugs — see full list: python benchmark_runner.py list-models

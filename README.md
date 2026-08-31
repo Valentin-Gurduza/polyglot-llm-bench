@@ -19,7 +19,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| 🌍 **Multilingual** | Evaluate LLMs in Romanian, English, French — or add any language |
+| 🌍 **Multilingual** | Evaluate LLMs in Romanian and English — or add any additional language |
 | 🤖 **Multi-Model** | Benchmark GPT-4o, Claude 3.5 Sonnet, Llama 3.3, Mistral, DeepSeek via OpenRouter |
 | 🔍 **Model Discovery** | Search & filter 300+ OpenRouter models, including `:free` tier |
 | ⚡ **Async Pipeline** | Concurrent API calls with rate limiting, retries, and progress tracking |
@@ -135,28 +135,26 @@ python benchmark_runner.py run --dry-run
 
 # Run with specific languages and models
 python benchmark_runner.py run \
-  --languages en,ro,fr \
+  --languages en,ro \
   --models openai/gpt-4o,anthropic/claude-3.5-sonnet \
   --workers 5
 
 # Run with all free models
-python benchmark_runner.py run --free-only --languages en
-
-# Custom config and output directory
-python benchmark_runner.py run \
-  --config my_config.yaml \
-  --output my_results/
+python benchmark_runner.py run --free-only --languages en,ro
 ```
 
 ### Output Files
 
-After a benchmark run, find these in the `results/` directory:
+After every benchmark run, the following files are automatically generated in `results/`:
 
-| File | Description |
-|------|-------------|
-| `benchmark_results.json` | Full results with metadata, responses, and token usage |
-| `evaluation_sheet.csv` | Pre-populated sheet for human annotators (empty scoring columns) |
-| `leaderboard.csv` | Aggregated per-model per-language performance stats |
+| Format | File Pattern | Purpose & Best Use Case |
+|:---|:---|:---|
+| 🌐 **Visual HTML Report** | `report_<model>.html` | **Interactive web report** — double-click to open in any browser with styled cards, metadata, and full model outputs. |
+| 📊 **Per-Model Evaluation CSV** | `evaluation_sheet_<model>.csv` | **Human annotators** — pre-populated spreadsheet with empty 1–5 scoring columns for that specific model. |
+| 🏆 **Leaderboard CSV** | `leaderboard.csv` | **Cumulative benchmark table** — tracks latency, tokens, and success rates across all tested models. |
+| 📑 **Master Evaluation CSV** | `evaluation_sheet.csv` | **Consolidated evaluation dataset** combining all models from the run. |
+| 📦 **Per-Model Raw JSON** | `results_<model>.json` | **Programmatic analysis & pipelines** with complete payload data for that model. |
+| 📦 **Master Raw JSON** | `benchmark_results.json` | **Complete run dump** with global metadata and all task responses. |
 
 ---
 
@@ -198,8 +196,8 @@ Each response is scored on **4 dimensions** (1–5 scale):
 | openai/gpt-4o | en | 100% | 1,234 ms | 487 |
 | openai/gpt-4o | ro | 100% | 1,456 ms | 523 |
 | anthropic/claude-3.5-sonnet | en | 100% | 2,100 ms | 612 |
-| anthropic/claude-3.5-sonnet | fr | 100% | 2,340 ms | 598 |
-| meta-llama/llama-3.3-70b-instruct | en | 80% | 890 ms | 445 |
+| anthropic/claude-3.5-sonnet | ro | 100% | 2,210 ms | 630 |
+| meta-llama/llama-3.3-70b-instruct | en | 90% | 890 ms | 445 |
 
 ---
 
@@ -216,7 +214,7 @@ polyglot-llm-bench/
 ├── docker-compose.yml           # Container orchestration
 ├── .env.example                 # Environment template
 ├── data/
-│   └── dataset.json             # Benchmark prompts (15 starter)
+│   └── dataset.json             # Benchmark prompts (20 prompts: EN & RO)
 ├── src/
 │   └── polyglot_bench/
 │       ├── __init__.py          # Package metadata
@@ -239,7 +237,7 @@ polyglot-llm-bench/
 ### config.yaml
 
 ```yaml
-languages: [ro, en, fr]
+languages: [ro, en]
 
 models:
   - openai/gpt-4o

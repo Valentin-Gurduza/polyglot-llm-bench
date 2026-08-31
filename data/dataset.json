@@ -15,6 +15,20 @@
   {
     "id": 2,
     "language": "en",
+    "category": "constraint_adherence",
+    "prompt": "Analyze the pros and cons of remote work. Your response must be output strictly as a valid JSON object with exactly three keys: 'summary' (string under 40 words), 'pros' (array of exactly 3 strings), and 'cons' (array of exactly 3 strings). Do NOT include any markdown code fences, backticks, or explanatory text outside the JSON.",
+    "constraints": [
+      "Strict valid JSON object only (no markdown fences ``` or commentary)",
+      "Exactly three keys: 'summary', 'pros', 'cons'",
+      "'summary' must be under 40 words",
+      "'pros' must contain exactly 3 string items",
+      "'cons' must contain exactly 3 string items"
+    ],
+    "reference_notes": "Validate JSON parsing. Ensure no markdown formatting surrounds the JSON. Count words in summary and count elements in arrays."
+  },
+  {
+    "id": 3,
+    "language": "en",
     "category": "cultural_localization",
     "prompt": "Rewrite the following American Thanksgiving dinner invitation for a British audience. Adapt cultural references, spelling, and food items appropriately while maintaining a warm, festive tone:\n\n\"You're invited to our Thanksgiving potluck! Bring your favorite dish — we'll have turkey, cranberry sauce, cornbread, and pumpkin pie. Football starts at 3 PM. RSVP by November 20th.\"",
     "constraints": [
@@ -26,7 +40,20 @@
     "reference_notes": "Thanksgiving is not a UK holiday — the adaptation should reframe the context (e.g., autumn gathering, harvest supper). 'Football' in the US = American football; in the UK = soccer. Spelling: 'favourite', 'colour', etc."
   },
   {
-    "id": 3,
+    "id": 4,
+    "language": "en",
+    "category": "cultural_localization",
+    "prompt": "Adapt an American corporate announcement about a '4th of July Summer BBQ and Long Weekend' for an Australian subsidiary office celebrating the Australia Day / summer holiday season. Adjust the workplace tone, terminology (e.g., barbecue -> barbie / BBQ), seasonal context (summer in January/February), and cultural etiquette.",
+    "constraints": [
+      "Must adapt to Australian cultural and workplace norms",
+      "Must reflect Southern Hemisphere summer seasonality",
+      "Must use natural Australian English phrasing without over-the-top caricature",
+      "Must maintain appropriate professional corporate tone"
+    ],
+    "reference_notes": "Check that July summer references are adapted to Australian summer months (January/February). Verify natural Australian idioms (e.g., public holiday, BBQ/barbie) and workplace culture."
+  },
+  {
+    "id": 5,
     "language": "en",
     "category": "fact_checking",
     "prompt": "Explain the key milestones in the founding and development of the European Union, including the exact years of: the Treaty of Rome, the Maastricht Treaty, the introduction of the Euro currency, and the most recent country to join the EU. Be precise with dates.",
@@ -40,7 +67,20 @@
     "reference_notes": "Verify each date against established historical records. The model should NOT claim any country joined after Croatia (2013) unless the model's training data includes events after 2024. Watch for hallucinated dates or members."
   },
   {
-    "id": 4,
+    "id": 6,
+    "language": "en",
+    "category": "fact_checking",
+    "prompt": "Provide accurate historical facts regarding NASA's Apollo 11 mission: the exact launch date, the exact date of the lunar landing, the names and roles of all three crew members, and the total number of humans who have walked on the Moon across all Apollo missions.",
+    "constraints": [
+      "Launch date: July 16, 1969",
+      "Landing date: July 20, 1969",
+      "Crew members: Neil Armstrong (Commander), Buzz Aldrin (Lunar Module Pilot), Michael Collins (Command Module Pilot)",
+      "Total humans walked on the Moon: exactly 12 (across Apollo 11, 12, 14, 15, 16, 17)"
+    ],
+    "reference_notes": "Michael Collins stayed in lunar orbit and did not walk on the moon. Exactly 12 astronauts walked on the moon across 6 successful landing missions. Verify all names and dates."
+  },
+  {
+    "id": 7,
     "language": "en",
     "category": "technical_localization",
     "prompt": "A Kubernetes cluster shows the following error: 'CrashLoopBackOff — Back-off restarting failed container'. Explain this error message to a non-technical project manager in plain English. Cover: what is happening, why it might happen, and what the development team should do next. Avoid jargon.",
@@ -53,7 +93,20 @@
     "reference_notes": "CrashLoopBackOff means a container keeps crashing and Kubernetes keeps trying to restart it with increasing delays. Common causes: misconfiguration, missing dependencies, OOM. The explanation should be accurate but accessible."
   },
   {
-    "id": 5,
+    "id": 8,
+    "language": "en",
+    "category": "technical_localization",
+    "prompt": "Explain the difference between SQL database indexes (B-Tree vs Hash index) to a junior software developer. Include: how each index structure works internally, the Big-O time complexity for range queries and equality lookups, and a practical recommendation on when to choose which.",
+    "constraints": [
+      "Must explain internal mechanisms of B-Tree and Hash index",
+      "Must state Big-O complexity for equality lookups (Hash: O(1) avg, B-Tree: O(log N))",
+      "Must state Big-O complexity for range queries (B-Tree: O(log N + K), Hash: O(N) / not supported)",
+      "Must provide clear practical use-case recommendations"
+    ],
+    "reference_notes": "Verify Big-O complexity accuracy. Hash index does not support ordered range queries (BETWEEN, <, >) efficiently, whereas B-Trees excel at sorted/range scans."
+  },
+  {
+    "id": 9,
     "language": "en",
     "category": "logical_reasoning",
     "prompt": "A farmer needs to cross a river with a wolf, a goat, and a cabbage. The boat can only carry the farmer and one item at a time. If left alone together: the wolf will eat the goat, and the goat will eat the cabbage. The wolf won't eat the cabbage. Describe the minimum number of crossings needed and list each step.",
@@ -66,7 +119,19 @@
     "reference_notes": "Classic river-crossing puzzle. Solution: 1) Farmer+Goat cross. 2) Farmer returns. 3) Farmer+Wolf cross. 4) Farmer+Goat return. 5) Farmer+Cabbage cross. 6) Farmer returns. 7) Farmer+Goat cross."
   },
   {
-    "id": 6,
+    "id": 10,
+    "language": "en",
+    "category": "logical_reasoning",
+    "prompt": "On an island, inhabitants are either Knights (who always tell the truth) or Knaves (who always lie). You meet two inhabitants, Alex and Blair. Alex makes the statement: 'At least one of us is a Knave.' Determine whether Alex is a Knight or a Knave, and whether Blair is a Knight or a Knave. Provide your step-by-step deductive proof.",
+    "constraints": [
+      "Must deduce correct identities: Alex is a Knight, Blair is a Knave",
+      "Must provide step-by-step logical proof evaluating both possibilities for Alex",
+      "Must show why Alex cannot be a Knave without contradiction"
+    ],
+    "reference_notes": "Proof: If Alex were a Knave, his statement 'at least one is a Knave' would be true, causing a contradiction (Knave telling truth). Thus, Alex must be a Knight. Since Alex tells the truth and is a Knight, the other person (Blair) must be a Knave."
+  },
+  {
+    "id": 11,
     "language": "ro",
     "category": "constraint_adherence",
     "prompt": "Scrie o reteta pentru clatite romanesti traditionale. Reteta trebuie sa aiba EXACT 5 pasi, numerotati de la 1 la 5. NU folosi cuvantul 'adauga' in niciun pas. Fiecare pas trebuie sa fie o singura propozitie.",
@@ -79,7 +144,20 @@
     "reference_notes": "Verificare: numarati pasii (strict 5), cautare case-insensitive pentru 'adauga'/'Adauga', numarati propozitiile per pas. Reteta trebuie sa includa: faina, oua, lapte, si prajire."
   },
   {
-    "id": 7,
+    "id": 12,
+    "language": "ro",
+    "category": "constraint_adherence",
+    "prompt": "Scrie o scrisoare scurta de intentie pentru un post de specialist in evaluare AI in limba romana. Constrangeri stricte:\n1. Lungimea trebuie sa fie intre 70 si 90 de cuvinte.\n2. Trebuie sa inceapa exact cu formula: 'Stimate Director de Resurse Umane,'.\n3. Nu folosi literele 'k' si 'w' nicaieri in text.\n4. Mentioneaza experienta cu modele de limbaj mari.",
+    "constraints": [
+      "Lungime: strict intre 70 si 90 de cuvinte",
+      "Inceput exact: 'Stimate Director de Resurse Umane,'",
+      "Nu contine literele 'k' sau 'w' (nici majuscule, nici minuscule)",
+      "Include referinta la modele de limbaj / evaluare AI"
+    ],
+    "reference_notes": "Numarati cuvintele cu strictete. Verificati absenta literelor 'k', 'K', 'w', 'W' (atentie la 'work', 'benchmark', etc.). Verificati fraza de introducere."
+  },
+  {
+    "id": 13,
     "language": "ro",
     "category": "cultural_localization",
     "prompt": "Explica unui turist strain semnificatia traditionala a Martisorului in cultura romaneasca. Include: originea traditiei, simbolismul culorilor alb si rosu, cum se ofera si se poarta martisorul, si cand se celebreaza. Raspunsul trebuie sa fie in limba romana.",
@@ -92,7 +170,20 @@
     "reference_notes": "Martisorul este o traditie romaneasca (si moldoveneasca/bulgara) celebrata pe 1 Martie. Barbatii ofera martisoare femeilor. Se poarta la piept pana la sfarsitul lunii martie, apoi se atarna intr-un copac inflorit."
   },
   {
-    "id": 8,
+    "id": 14,
+    "language": "ro",
+    "category": "cultural_localization",
+    "prompt": "Adapteaza o campanie promotionala de comert online din Statele Unite ('Labor Day Weekend Mega Sale') pentru publicul din Romania, adaptand-o pentru perioada sarbatorilor de iarna traditionale (Mos Nicolae si Craciun). Include formulari specifice, ton adecvat culturii romanesti si obiceiuri de cumparare locale (cadouri pentru cei dragi, ghetute curate).",
+    "constraints": [
+      "Trebuie sa adapteze contextul cultural la sarbatorile de iarna din Romania (Mos Nicolae / Craciun)",
+      "Trebuie sa utilizeze referinte culturale locale autentice (ghetute, cadouri sub brad)",
+      "Trebuie sa foloseasca un ton comercial cald, persuasiv si natural in limba romana",
+      "Fara traduceri mot-a-mot ale idiomurilor americane"
+    ],
+    "reference_notes": "Evaluati daca mesajul suna natural in limba romana si daca referintele la Mos Nicolae (ghetute) si Craciun sunt integrate corect."
+  },
+  {
+    "id": 15,
     "language": "ro",
     "category": "fact_checking",
     "prompt": "Descrie cronologia evenimentelor principale ale Revolutiei Romane din decembrie 1989. Include: orasul unde au inceput protestele, data inceputului, rolul lui Nicolae Ceausescu, si data executiei acestuia. Fii precis cu datele.",
@@ -106,7 +197,20 @@
     "reference_notes": "Revolutia a inceput la Timisoara pe 16 decembrie 1989 cu proteste in jurul casei pastorului Laszlo Tokes. Ceausescu a tinut ultimul discurs pe 21 decembrie la Bucuresti, a fugit pe 22 decembrie, a fost judecat si executat pe 25 decembrie 1989."
   },
   {
-    "id": 9,
+    "id": 16,
+    "language": "ro",
+    "category": "fact_checking",
+    "prompt": "Prezinta datele istorice exacte si semnificatia urmatoarelor trei evenimente cruciale pentru formarea statului roman modern: Mica Unire (Unirea Principatelor Romane sub Alexandru Ioan Cuza), Razboiul de Independenta si proclamarea independentei de stat, si Marea Unire. Mentioneaza anii si zilele exacte unde este cazul.",
+    "constraints": [
+      "Mica Unire: 24 ianuarie 1859 (alegerea lui Alexandru Ioan Cuza si in Tara Romaneasca dupa 5 ianuarie in Moldova)",
+      "Independenta Romaniei: proclamata la 9 mai 1877 (recunoscuta prin Tratatul de la Berlin in 1878)",
+      "Marea Unire: 1 decembrie 1918 (Marea Adunare Nationala de la Alba Iulia)",
+      "Toate datele si personajele istorice trebuie sa fie exacte"
+    ],
+    "reference_notes": "Verificati exactitatea istorica a tuturor datelor (24 ianuarie 1859, 9 mai 1877 / 1878, 1 decembrie 1918). Fara confuzii intre Mica Unire si Marea Unire."
+  },
+  {
+    "id": 17,
     "language": "ro",
     "category": "technical_localization",
     "prompt": "Explica conceptul de 'invatare automata' (machine learning) folosind terminologie tehnica standardizata in limba romana. Acopera: definitia, diferenta intre invatare supervizata si nesupervizata, si da un exemplu practic pentru fiecare tip. Foloseste termenii tehnici consacrati in romana, nu anglicisme.",
@@ -119,7 +223,20 @@
     "reference_notes": "Terminologie standard RO: 'invatare automata' (ML), 'invatare supervizata' (supervised), 'invatare nesupervizata' (unsupervised), 'retea neuronala' (neural network), 'set de date' (dataset), 'clasificare' (classification), 'grupare' (clustering)."
   },
   {
-    "id": 10,
+    "id": 18,
+    "language": "ro",
+    "category": "technical_localization",
+    "prompt": "Redacteaza un ghid scurt de securitate cibernetica pentru angajatii din administratia publica despre atacurile de tip 'phishing' si importanta autentificarii multifactor (MFA). Foloseste terminologia tehnica oficiala in limba romana (ex: inginerie sociala, inselaciune electronica, autentificare cu mai multi factori, compromiterea credidentialelor) si ofera 3 reguli practice clare.",
+    "constraints": [
+      "Trebuie sa foloseasca terminologie tehnica romana corecta pentru securitate informatica",
+      "Trebuie sa explice clar mecanismul de atac si masurile de protectie",
+      "Trebuie sa contina exact 3 reguli practice numerotate",
+      "Limbaj formal, clar si accesibil functionarilor publici"
+    ],
+    "reference_notes": "Verificati utilizarea termenilor corecti in limba romana ('inselaciune electronica / pescuit de date', 'autentificare cu mai multi factori', 'date de autentificare')."
+  },
+  {
+    "id": 19,
     "language": "ro",
     "category": "logical_reasoning",
     "prompt": "Intr-o camera sunt patru persoane: Ana, Bogdan, Clara si Dan. Se stie ca:\n1. Ana sta la stanga lui Bogdan.\n2. Clara nu sta langa Dan.\n3. Dan sta la un capat al randului.\n4. Bogdan sta langa Clara.\n\nCare este ordinea corecta de la stanga la dreapta? Explica rationamentul pas cu pas.",
@@ -132,70 +249,16 @@
     "reference_notes": "Solutia corecta: Dan - Ana - Bogdan - Clara. Rationament: Dan la capat (conditia 3). Ana la stanga lui Bogdan (conditia 1). Bogdan langa Clara (conditia 4). Clara nu langa Dan (conditia 2) -> Clara la celalalt capat."
   },
   {
-    "id": 11,
-    "language": "fr",
-    "category": "constraint_adherence",
-    "prompt": "Redigez un courriel formel a un directeur d'entreprise pour demander un rendez-vous professionnel. Le courriel doit contenir MAXIMUM 100 mots. N'utilisez PAS le mot 'cordialement' ni 'sincerement' comme formule de politesse. Le courriel doit inclure une date et une heure proposees.",
-    "constraints": [
-      "Maximum 100 mots",
-      "Ne contient pas 'cordialement' ni 'sincerement'",
-      "Inclut une date et une heure proposees",
-      "Ton formel maintenu"
-    ],
-    "reference_notes": "Compter les mots strictement (max 100). Recherche insensible a la casse pour 'cordialement'/'sincerement'. Verifier la presence d'une date et d'une heure. Alternatives acceptables: 'Respectueusement', 'Avec mes salutations distinguees', etc."
-  },
-  {
-    "id": 12,
-    "language": "fr",
-    "category": "cultural_localization",
-    "prompt": "Expliquez la signification historique et culturelle du 14 juillet (la fete nationale francaise) a un etranger qui ne connait pas l'histoire de France. Incluez : l'evenement historique d'origine, comment la fete est celebree aujourd'hui, et pourquoi elle est importante pour l'identite francaise.",
-    "constraints": [
-      "Doit mentionner la prise de la Bastille (1789)",
-      "Doit decrire les celebrations modernes (defile militaire, feux d'artifice)",
-      "Doit expliquer l'importance symbolique",
-      "Doit etre accessible a un non-Francais"
-    ],
-    "reference_notes": "Le 14 juillet commemore la prise de la Bastille le 14 juillet 1789, symbole de la fin de l'absolutisme. Celebrations: defile militaire sur les Champs-Elysees, feux d'artifice, bals des pompiers. Attention: la fete nationale celebre aussi la Fete de la Federation (14 juillet 1790)."
-  },
-  {
-    "id": 13,
-    "language": "fr",
-    "category": "fact_checking",
-    "prompt": "Decrivez les principales etapes de la construction de la Tour Eiffel. Incluez : l'architecte/ingenieur principal, l'annee du debut et de la fin de la construction, la hauteur originale, et l'evenement pour lequel elle a ete construite. Soyez precis avec les chiffres.",
-    "constraints": [
-      "Gustave Eiffel (ingenieur principal)",
-      "Construction: 1887-1889",
-      "Hauteur originale: environ 300 metres (312 m avec drapeau)",
-      "Construite pour l'Exposition universelle de 1889",
-      "Tous les chiffres doivent etre exacts"
-    ],
-    "reference_notes": "La Tour Eiffel a ete concue par les ingenieurs Maurice Koechlin et Emile Nouguier du bureau de Gustave Eiffel. Construction: 28 janvier 1887 - 31 mars 1889. Hauteur: 300 m (330 m avec antennes aujourd'hui). Inauguree pour l'Exposition universelle de 1889 (centenaire de la Revolution francaise)."
-  },
-  {
-    "id": 14,
-    "language": "fr",
-    "category": "technical_localization",
-    "prompt": "Traduisez et adaptez la documentation technique suivante d'une API REST en francais technique professionnel. Utilisez la terminologie informatique francaise standardisee :\n\n\"This endpoint accepts a POST request with a JSON body containing the user's authentication token. The response returns a paginated list of resources with metadata. Rate limiting is enforced at 100 requests per minute. Unauthorized requests return a 401 status code.\"",
-    "constraints": [
-      "Doit utiliser la terminologie francaise standardisee",
-      "Doit traduire 'endpoint' en 'point de terminaison'",
-      "Doit traduire 'token' en 'jeton'",
-      "Doit maintenir la precision technique",
-      "Doit etre naturel en francais technique"
-    ],
-    "reference_notes": "Terminologie FR standardisee: 'endpoint' = 'point de terminaison', 'request' = 'requete', 'response' = 'reponse', 'token' = 'jeton (d'authentification)', 'rate limiting' = 'limitation de debit', 'paginated' = 'pagine(e)', 'status code' = 'code de statut'."
-  },
-  {
-    "id": 15,
-    "language": "fr",
+    "id": 20,
+    "language": "ro",
     "category": "logical_reasoning",
-    "prompt": "Un train part de Paris a 08h00 et arrive a Lyon a 10h00. Un autre train part de Lyon a 08h30 et arrive a Paris a 10h30. Les deux trains roulent a vitesse constante sur la meme ligne.\n\nA quelle heure les deux trains se croisent-ils ? Montrez votre raisonnement etape par etape.",
+    "prompt": "Ai 9 monede identice ca aspect, dintre care una este falsa si cantareste mai putin decat celelalte 8 (care au greutati egale). Ai la dispozitie o balanta cu doua talgere (fara greutati marcate). Cum poti gasi moneda falsa din MAXIMUM 2 cantariri? Explica procedura pas cu pas si toate ramurile posibile.",
     "constraints": [
-      "Doit arriver a la reponse correcte: 09h15",
-      "Doit montrer le raisonnement mathematique",
-      "Doit definir les variables (distance, vitesse)",
-      "La solution doit etre logiquement coherente"
+      "Trebuie sa ofere solutia optima in exact 2 cantariri",
+      "Trebuie sa imparta monedele in 3 grupe a cate 3 monede",
+      "Trebuie sa explice ambele cazuri la prima cantarire (balanta in echilibru vs inclinata)",
+      "Trebuie sa arate cum a doua cantarire identifica precis moneda falsa"
     ],
-    "reference_notes": "Paris-Lyon: duree 2h (08h00-10h00). Lyon-Paris: duree 2h (08h30-10h30). Les trains ont la meme vitesse (D/2h). Le train 1 part 30 min avant. Quand le train 2 part (08h30), le train 1 a parcouru 1/4 de D. Ils se rapprochent a vitesse 2x(D/2h) = D/h. Distance restante: 3D/4. Temps de rencontre: (3D/4)/(D/h) = 0.75h = 45 min apres 08h30 = 09h15."
+    "reference_notes": "Solutie clasica: Pas 1: Imparte in 3 grupe (A, B, C de cate 3). Cantareste A vs B. Daca A=B, falsa e in C; daca A!=B, falsa e in grupa mai usoara. Pas 2: Din grupa de 3 cu moneda falsa, cantareste 1 moneda vs 1 moneda. Daca sunt egale, a treia e falsa; altfel, cea mai usoara este falsa."
   }
 ]

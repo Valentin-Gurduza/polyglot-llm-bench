@@ -43,7 +43,6 @@ The evaluation sheet (`evaluation_sheet.csv`) is pre-populated with model output
 
 **Language-Specific Notes:**
 - **Romanian (ro):** Check for correct diacritics (ă, â, î, ș, ț), proper case endings, and Romanian-specific idioms.
-- **French (fr):** Check for accent marks (é, è, ê, ë, à, ç), gender agreement, and subjunctive usage where required.
 - **English (en):** Check for consistent dialect (US/UK), proper article usage, and idiomatic phrasing.
 
 ---
